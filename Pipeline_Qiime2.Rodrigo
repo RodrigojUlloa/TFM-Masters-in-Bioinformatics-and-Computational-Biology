@@ -1,0 +1,928 @@
+
+conda activate qiime2-2022.11
+
+#Primero importar los datos en formato qiime2, para eso uso un archivo manifiesto, que es un archivo de texto separado por comas y cambios de linea donde indico el nombre que le voy a dar al archivo, la ubicación del archivo a importar, el nombre y si es forward o reverse, para facilitarlo, $PWD, significa el directorio en el que estás, así no hace falta escribir todo el pathway hasta donde están los archivos
+
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path Manifiesto_protocolo_qiime2.csv --output-path paired-end-Cyano_Rodrigo.qza --input-format PairedEndFastqManifestPhred33
+
+qiime demux summarize --i-data paired-end-Cyano_Rodrigo.qza --o-visualization paired-end-demux_Cyano_Rodrigo.qzv
+
+qiime tools view paired-end-demux_Cyano_Rodrigo.qzv
+
+# Hacer una carpeta nueva y meter en ella todos los archivos Fastq
+
+mkdir secuencias_fastq
+
+mv *.fastq secuencias_fastq
+
+#Vamos a probar a eliminar los primers con cutadap antes de hacer el denoising y filtrado con dada2. cuando hagamos este paso habrá que omitir la eliminación de los primers (--p-trim-left-f y r 20 y 25)
+
+qiime cutadapt trim-paired \
+  --i-demultiplexed-sequences paired-end-demux_Cyano_Rodrigo.qza \
+  --p-cores 8 \
+  --p-front-f GGGGAATYTTCCGCAATGGG \
+  --p-front-r GACTACWGGGGTATCTAATCCCWTT \
+  --p-minimum-length 150 \
+  --p-discard-untrimmed \
+  --o-trimmed-sequences demux_trimmed_Cyano_Rodrigo \
+  --verbose > primer_trimming.log
+  
+# por defecto permite un error en el reconocimiento de los primers de 0,1 sobre 1 (error maximo 0-1), en el caso de nuestros primers es 2,5 bases y 2. Además, por defecto también se tienen en cuenta las inserciones y deleciones en el reconocimiento de los primers.
+
+# Ahora hacemos el denoising con dada2 pero sin quitar los primers porque ya se han quitado con el cutadapt:
+
+qiime dada2 denoise-paired \
+  --i-demultiplexed-seqs demux_trimmed_Cyano_Rodrigo.qza \
+  --p-trunc-len-f 240 \
+  --p-trunc-len-r 180 \
+  --o-table table_Cyano_Rodrigo_trimmed.qza \
+  --o-representative-sequences rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-denoising-stats denoising-stats_Cyano_Rodrigo_trimmed.qza \
+  --p-n-threads 10 \
+  --p-n-reads-learn 1500000
+  
+
+qiime feature-table summarize \
+  --i-table table_Cyano_Rodrigo_trimmed.qza \
+  --o-visualization table_Cyano_Rodrigo_trimmed.qzv \
+  --m-sample-metadata-file Metadata_Cyano_Rodrigo.csv
+
+qiime feature-table tabulate-seqs \
+  --i-data rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-visualization rep-seqs_Cyano_Rodrigo_trimmed.qzv
+  
+#Para visualizarlo
+
+qiime tools view table_Cyano_Rodrigo_trimmed.qzv
+
+qiime tools view rep-seqs_Cyano_Rodrigo_trimmed.qzv
+
+#Sumarizar estadísticas
+
+qiime metadata tabulate \
+  --m-input-file denoising-stats_Cyano_Rodrigo_trimmed.qza \
+  --o-visualization denoising-stats_Cyano_Rodrigo_trimmed.qzv
+  
+#Visualizar estadísticas
+
+qiime tools view denoising-stats_Cyano_Rodrigo_trimmed.qzv
+
+
+qiime feature-table group \
+  --i-table table_Cyano_Rodrigo_trimmed.qza \
+  --p-axis sample \
+  --m-metadata-file Metadata_groupayb.csv \
+  --m-metadata-column  MetadataColumn \
+  --p-mode sum \
+  --o-grouped-table grouped-table_Cyano_Rodrigo.qza
+
+#Sumarizar y visualizar. En este caso la tabla de metadatos es una nueva con los ids para que sea solo 1 (sin Ra y Rb)
+qiime feature-table summarize \
+  --i-table grouped-table_Cyano_Rodrigo.qza \
+  --o-visualization grouped-table_Cyano_Rodrigo.qzv \
+  --m-sample-metadata-file Metadata_groupayb2.csv
+
+
+
+#hemos comparado los resultados usando RStudio (Miguel), el pipeline sin cutadapt y usando el pipeline con cutadapt y los resultados son similares en cuanto al % de secuencias no quimericas finales. Pero usando cutadapt se obtienen menos lecturas. Continuamos con los resultados obtenidos usando el cutadapt en qiime2 (realizado por Nines y Albano). 
+
+#Filtro para quitar ASVs con frecuencia < del 0.1% de la profundidad media (se supone que pueden ser errores de secuenciación, Miguelon ponía 0.1, pero si hago eso me quito 1/3 de las lecturas y en el artícuo ponía eso). Se debe de mirar la mean depth, observando el valor de la mean frequency per sample y luego multiplicar por 0.001. En este caso el valor es 157,422.55 que multiplicado por 0.001 es igual a 157.42255 que al redondearlo queda 158 : 
+
+qiime feature-table filter-features \
+  --i-table grouped-table_Cyano_Rodrigo.qza \
+  --p-min-frequency 158 \
+  --p-min-samples 1 \
+  --o-filtered-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza
+  
+#Filtro tambien las secuencias representativas
+
+qiime feature-table filter-seqs --i-data rep-seqs_Cyano_Rodrigo_trimmed.qza --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza --o-filtered-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza
+
+#Sumarizo los resultados
+
+qiime feature-table summarize \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --o-visualization frec_filtered_table_Cyano_Rodrigo_trimmed.qzv 
+   
+qiime tools view frec_filtered_table_Cyano_Rodrigo_trimmed.qzv
+
+#Se pasa de tener 2,833,606 a 2,817,786 secuencias. El número de ASVs pasa de 797 a 163. 
+
+qiime feature-table tabulate-seqs \
+  --i-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-visualization filtered_rep-seqs_Cyano_Rodrigo_trimmed.qzv   
+  
+qiime tools view filtered_rep-seqs_Cyano_Rodrigo_trimmed.qzv  
+ 
+
+	
+qiime phylogeny align-to-tree-mafft-fasttree \
+  --i-sequences filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --p-n-threads auto \
+  --o-alignment aligned-rep-seqs_Cyano_Rodrigo.qza \
+  --o-masked-alignment masked-aligned-rep-seqs_Cyano_Rodrigo.qza \
+  --o-tree unrooted-tree_Cyano_Rodrigo.qza \
+  --o-rooted-tree rooted-tree_Cyano_Rodrigo.qza
+  
+
+
+#Después hay que descargar la base de datos con el siguiente comando:
+
+qiime rescript get-silva-data \
+    --p-version '138.1' \
+    --p-target 'SSURef_NR99' \
+    --p-include-species-labels \
+    --p-ranks domain kingdom phylum class order suborder family subfamily genus \
+    --o-silva-sequences silva-138.1-ssu-nr99-rna-seqs.qza \
+    --o-silva-taxonomy silva-138.1-ssu-nr99-tax.qza
+      
+
+qiime rescript reverse-transcribe \
+    --i-rna-sequences silva-138.1-ssu-nr99-rna-seqs.qza \
+    --o-dna-sequences silva-138.1-ssu-nr99-seqs.qza
+
+
+
+qiime rescript filter-seqs-length-by-taxon \
+    --i-sequences silva-138.1-ssu-nr99-seqs.qza \
+    --i-taxonomy silva-138.1-ssu-nr99-tax.qza \
+    --p-labels Archaea Bacteria Eukaryota \
+    --p-min-lens 900 1200 1400 \
+    --o-filtered-seqs silva-138.1-ssu-nr99-seqs-filt.qza \
+    --o-discarded-seqs silva-138.1-ssu-nr99-seqs-discard.qza
+
+
+qiime feature-classifier extract-reads \
+  --i-sequences silva-138.1-ssu-nr99-seqs-filt.qza \
+  --p-f-primer GGGGAATYTTCCGCAATGGG \
+  --p-r-primer GACTACWGGGGTATCTAATCCCTTT \
+  --p-min-length 200 \
+  --p-max-length 500 \
+  --o-reads ref-seqs-S138.qza
+
+qiime feature-classifier fit-classifier-naive-bayes \
+  --i-reference-reads ref-seqs-S138.qza \
+  --i-reference-taxonomy silva-138.1-ssu-nr99-tax.qza \
+  --o-classifier classifier-s138.qza
+
+#Tercero hacer la asignación taxonómica y visualizarla en una tabla:
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier classifier-s138.qza \
+  --i-reads filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-classification taxonomy-s138_Cyano_Rodrigo.qza
+
+qiime metadata tabulate \
+  --m-input-file taxonomy-s138_Cyano_Rodrigo.qza \
+  --o-visualization taxonomy-s138_Cyano_Rodrigo.qzv
+
+
+
+#Exporto y extraigo la tabla:
+
+qiime tools export \
+  --input-path taxonomy-s138_Cyano_Rodrigo.qza \
+  --output-path exported-feature-table_Cyano_Rodrigo
+  
+#Me da una tabla con el nombre de la ASV, las asignaciones y el ratio de cada asignación
+
+qiime tools extract \
+  --input-path taxonomy-s138_Cyano_Rodrigo.qza \
+  --output-path extracted-feature-table_Cyano_Rodrigo
+  
+
+qiime taxa barplot \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-s138_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization taxa-bar-plots_Cyano_Rodrigo.qzv
+
+
+
+#Filtro para dejar solo cyanobacterias y quitar cloroplastos
+
+
+qiime taxa filter-table \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-s138_Cyano_Rodrigo.qza \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tableCyanobacteriasyCloroplast.qza
+
+qiime taxa filter-table \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-s138_Cyano_Rodrigo.qza \
+  --p-exclude o__Chloroplast \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tablesoloCyanobacterias.qza
+
+  
+#Ahora filtro también las secuencias basandome en la tabla que ya he creado antes
+
+qiime feature-table filter-seqs \
+  --i-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-filtered-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza
+
+#Sumarizo los resultados
+
+qiime feature-table summarize \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-visualization tablesoloCyanobacterias.qzv
+   
+qiime feature-table tabulate-seqs \
+  --i-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza \
+  --o-visualization Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qzv
+    
+# Paso de tener 163 ASVs a 148. La longitud mínima y máxima de secuencia es de 377 y 397 nucleótidos respectivamente.
+
+#Hago de nuevo los barplots. 
+
+qiime taxa barplot \
+  --i-table tablesoloCyanobacterias.qza \
+  --i-taxonomy taxonomy-s138_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization Cyanobacteria-Bien-s138-taxa-bar-plots.qzv
+
+
+
+
+#Exporto a biom y a archivo de  texto
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exported-tableSOLOCyanobacterias
+
+biom convert \
+-i exported-tableSOLOCyanobacterias/feature-table.biom \
+-o exported-tableSOLOCyanobacterias/soloCyanobacteriasfeature-table.txt \
+--header-key “taxonomy” --to-tsv
+
+
+
+#Export table.qza in feature-table.biom within exportedfa folder
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exportedfa
+
+#Export classification or assignation (classification.qza) into taxonomy.tsv within exportedfa folder
+
+qiime tools export \
+  --input-path taxonomy-s138_Cyano_Rodrigo.qza \
+  --output-path exportedfa
+
+#Format columns header of taxonomy.tsv to its proper nomenclature
+
+sed -i s'/Feature ID\tTaxon\tConfidence/\#ASVID\ttaxonomy\tconfidence/'  exportedfa/taxonomy.tsv
+
+#Add assignation metadata to each asv in feature-table.biom. It generates table-with-taxonomy.biom
+
+biom add-metadata -i exportedfa/feature-table.biom -o exportedfa/table-with-taxonomy.biom --observation-metadata-fp exportedfa/taxonomy.tsv --sc-separated taxonomy 
+
+#Export to tabular file
+
+biom convert --to-tsv -i exportedfa/table-with-taxonomy.biom -o exportedfa/fatable.tsv --header-key "taxonomy"
+
+
+#Se va a preceder a realizar un estudio de la alpha y beta diversidad tal y como lo hace Miguelón. En este caso se utiliza la frecuencia maxima de lecturas por muestra, siendo 207213.
+
+qiime diversity alpha-rarefaction --i-table tablesoloCyanobacterias.qza \
+				  --p-max-depth 207213 \
+				  --p-steps 20  \
+				  --i-phylogeny rooted-tree_Cyano_Rodrigo.qza \
+				  --m-metadata-file Metadata_groupayb2.csv \
+				  --o-visualization rarefaction_curves.qzv
+
+
+
+# Ahora se va a proceder a realizar el mismo protocolo, pero con greengenes:
+# Intalación y convsersión de la base de datos de greenges al formato requerido.
+
+gzip -d gg_13_5.fasta.gz # base de datos
+gzip -d gg_13_5_taxonomy.txt.gz # taxonomía
+
+qiime tools import \
+	--type "FeatureData[Sequence]" \
+	--input-path gg_13_5.fasta \
+	--output-path gg_13_5.qza
+	
+qiime tools import \
+	--type "FeatureData[Taxonomy]" \
+	--input-format HeaderlessTSVTaxonomyFormat \
+	--input-path gg_13_5_taxonomy.txt \
+	--output-path ref-taxonomy-gg_13_5.qza
+
+
+qiime feature-classifier extract-reads \
+  --i-sequences gg_13_5.qza \
+  --p-f-primer GGGGAATYTTCCGCAATGGG \
+  --p-r-primer GACTACWGGGGTATCTAATCCCTTT \
+  --p-min-length 200 \
+  --p-max-length 500 \
+  --o-reads ref-seqs-gg_13_5.qza
+
+qiime feature-classifier fit-classifier-naive-bayes \
+  --i-reference-reads ref-seqs-gg_13_5.qza \
+  --i-reference-taxonomy ref-taxonomy-gg_13_5.qza \
+  --o-classifier classifier-gg_13_5.qza
+
+#Tercero hacer la asignación taxonómica y visualizarla en una tabla:
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier classifier-gg_13_5.qza \
+  --i-reads filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-classification taxonomy-gg_13_5_Cyano_Rodrigo.qza
+
+qiime metadata tabulate \
+  --m-input-file taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --o-visualization taxonomy-s138_Cyano_Rodrigo.qzv
+
+
+#Exporto y extraigo la tabla:
+
+qiime tools export \
+  --input-path taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --output-path exported-feature-table_Cyano_Rodrigo-gg_13_5
+  
+#Me da una tabla con el nombre de la ASV, las asignaciones y el ratio de cada asignación
+
+qiime tools extract \
+  --input-path taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --output-path extracted-feature-table_Cyano_Rodrigo-gg_13_5
+
+
+
+qiime taxa barplot \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization taxa-bar-plots_Cyano_Rodrigo.qzv
+
+
+
+qiime taxa filter-table \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tableCyanobacteriasyCloroplast.qza
+
+qiime taxa filter-table \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --p-exclude o__Chloroplast \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tablesoloCyanobacterias.qza
+
+
+  
+#Ahora filtro también las secuencias basandome en la tabla que ya he creado antes
+
+qiime feature-table filter-seqs \
+  --i-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-filtered-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza
+
+#Sumarizo los resultados
+
+qiime feature-table summarize \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-visualization tablesoloCyanobacterias.qzv
+   
+qiime feature-table tabulate-seqs \
+  --i-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza \
+  --o-visualization Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qzv
+    
+# Paso de tener 163 ASVs a 156. La longitud mínima y máxima de secuencia es de 116,438.0 y 207,213.0 nucleótidos respectivamente.
+
+
+
+qiime taxa barplot \
+  --i-table tablesoloCyanobacterias.qza \
+  --i-taxonomy taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization Cyanobacteria-Bien-gg_13_5-taxa-bar-plots.qzv
+
+
+#Exporto a biom y a archivo de  texto
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exported-tableSOLOCyanobacterias-gg_13_5
+
+biom convert \
+-i exported-tableSOLOCyanobacteriasgg_13_5/feature-table.biom \
+-o exported-tableSOLOCyanobacteriasgg_13_5/soloCyanobacteriasfeature-table.txt \
+--header-key “taxonomy” --to-tsv
+
+# Me da la tabla de las ASVs con las frecuencias, pero no me da la taxonomía
+
+
+#Export table.qza in feature-table.biom within exportedfa folder
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exportedfa-gg_13_5
+
+#Export classification or assignation (classification.qza) into taxonomy.tsv within exportedfa folder
+
+qiime tools export \
+  --input-path taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --output-path exportedfa-gg_13_5
+
+#Format columns header of taxonomy.tsv to its proper nomenclature
+
+sed -i s'/Feature ID\tTaxon\tConfidence/\#ASVID\ttaxonomy\tconfidence/'  exportedfa-gg_13_5/taxonomy.tsv
+
+#Add assignation metadata to each asv in feature-table.biom. It generates table-with-taxonomy.biom
+
+biom add-metadata -i exportedfa-gg_13_5/feature-table.biom -o exportedfa-gg_13_5/table-with-taxonomy.biom --observation-metadata-fp exportedfa-gg_13_5/taxonomy.tsv --sc-separated taxonomy 
+
+#Export to tabular file
+
+biom convert --to-tsv -i exportedfa-gg_13_5/table-with-taxonomy.biom -o exportedfa-gg_13_5/fatable.tsv --header-key "taxonomy"
+
+
+# p-max-depth nº de lecturas mas abundantes contenga en una muestra
+
+
+qiime diversity alpha-rarefaction --i-table tablesoloCyanobacterias.qza \
+				  --p-max-depth 207213 \
+				  --p-steps 20 \
+				  --i-phylogeny rooted-tree_Cyano_Rodrigo.qza \
+				  --m-metadata-file Metadata_groupayb2.csv \
+				  --o-visualization rarefaction_curves-gg_13_5.qzv
+
+
+# AHORA SE VA A REALIZAR CON LA BASE DE DATOS RDP DE RIBOSOMAS
+
+pip install git+https://github.com/bokulich-lab/RESCRIPt.git
+
+
+
+qiime rescript filter-seqs-length-by-taxon \
+    --i-sequences rdp_ref_seqs.qza \
+    --i-taxonomy rdp_ref_taxonomy.qza \
+    --p-labels Archaea Bacteria Eukaryota \
+    --p-min-lens 900 1200 1400 \
+    --o-filtered-seqs rdp_ref_seqs-filt.qza \
+    --o-discarded-seqs rdp_ref_seqs-discard.qza
+    
+ 
+
+qiime feature-classifier fit-classifier-naive-bayes \
+  --i-reference-reads rdp_ref_seqs-filt.qza \
+  --i-reference-taxonomy rdp_ref_taxonomy.qza \
+  --o-classifier classifier-RDP-filt.qza
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier classifier-RDP-filt.qza \
+  --i-reads filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-classification taxonomy-RDP-filt_Cyano_Rodrigo.qza
+
+qiime metadata tabulate \
+  --m-input-file taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --o-visualization taxonomy-RDP-filt_Cyano_Rodrigo.qzv
+
+
+#Exporto y extraigo la tabla:
+
+qiime tools export \
+  --input-path taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --output-path exported-feature-table_Cyano_Rodrigo-RDP
+  
+#Me da una tabla con el nombre de la ASV, las asignaciones y el ratio de cada asignación
+
+qiime tools extract \
+  --input-path taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --output-path extracted-feature-table_Cyano_Rodrigo-RDP
+
+
+qiime taxa barplot \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization taxa-bar-plots_Cyano_Rodrigo-RDP.qzv
+
+qiime taxa filter-table \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --p-include c__Cyanobacteria \
+  --o-filtered-table tablesoloCyanobacterias-RDP.qza
+
+
+  
+#Ahora filtro también las secuencias basandome en la tabla que ya he creado antes
+
+qiime feature-table filter-seqs \
+  --i-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --i-table tablesoloCyanobacterias-RDP.qza \
+  --o-filtered-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo-RDP.qza
+
+#Sumarizo los resultados
+
+qiime feature-table summarize \
+  --i-table tablesoloCyanobacterias-RDP.qza \
+  --o-visualization tablesoloCyanobacterias-RDP.qzv
+   
+qiime feature-table tabulate-seqs \
+  --i-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo-RDP.qza \
+  --o-visualization Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo-RDP.qzv
+    
+
+qiime taxa barplot \
+  --i-table tablesoloCyanobacterias-RDP.qza \
+  --i-taxonomy taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization Cyanobacteria-Bien-taxa-bar-plots-RDP.qzv
+
+
+#Exporto a biom y a archivo de  texto
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias-RDP.qza \
+  --output-path exported-tableSOLOCyanobacterias-RDP
+
+biom convert \
+-i exported-tableSOLOCyanobacterias-RDP/feature-table.biom \
+-o exported-tableSOLOCyanobacterias-RDP/soloCyanobacteriasfeature-table.txt \
+--header-key “taxonomy” --to-tsv
+
+# Me da la tabla de las ASVs con las frecuencias, pero no me da la taxonomía
+
+
+#Export table.qza in feature-table.biom within exportedfa folder
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias-RDP.qza \
+  --output-path exportedfa-RDP
+
+#Export classification or assignation (classification.qza) into taxonomy.tsv within exportedfa folder
+
+qiime tools export \
+  --input-path taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --output-path exportedfa-RDP
+
+#Format columns header of taxonomy.tsv to its proper nomenclature
+
+sed -i s'/Feature ID\tTaxon\tConfidence/\#ASVID\ttaxonomy\tconfidence/'  exportedfa-RDP/taxonomy.tsv
+
+#Add assignation metadata to each asv in feature-table.biom. It generates table-with-taxonomy.biom
+
+biom add-metadata -i exportedfa-RDP/feature-table.biom -o exportedfa-RDP/table-with-taxonomy.biom --observation-metadata-fp exportedfa-RDP/taxonomy.tsv --sc-separated taxonomy 
+
+#Export to tabular file
+
+biom convert --to-tsv -i exportedfa-RDP/table-with-taxonomy.biom -o exportedfa-RDP/fatable.tsv --header-key "taxonomy"
+
+
+
+# Líneas 366 a 455: (CAMBIAR LO SIGUIENTE A RDP). 
+
+# p-max-depth nº de lecturas mas abundantes contenga en una muestra
+
+
+qiime diversity alpha-rarefaction --i-table tablesoloCyanobacterias-RDP.qza \
+				  --p-max-depth 207213 \
+				  --p-steps 20 \
+				  --i-phylogeny rooted-tree_Cyano_Rodrigo.qza \
+				  --m-metadata-file Metadata_groupayb2.csv \
+				  --o-visualization rarefaction_curves-RDP.qzv
+
+
+
+
+# Ahora se va a proceder a hacer lo mismo con silva 128. Aunque esta versión no es la más reciente, se sigue utilizando actualmente en el área de las cianobacterias. Esto es así porque actualmente se sigue utilizando en los estudios sobre cianobacterias. Esto es debido a que hace una mejor clasificación como se ha podido comprobar en la litertura, ya que por ahora no hay muchos genomas de cianobacterias secuenciados por lo que no están muy representadas en las bases de datos. 
+
+
+qiime rescript get-silva-data \
+    --p-version '128' \
+    --p-target 'SSURef_NR99' \
+    --p-include-species-labels \
+    --p-ranks domain kingdom phylum class order suborder family subfamily genus \
+    --o-silva-sequences silva-128-ssu-nr99-rna-seqs.qza \
+    --o-silva-taxonomy silva-128-ssu-nr99-tax.qza
+      
+
+qiime rescript reverse-transcribe \
+    --i-rna-sequences silva-128-ssu-nr99-rna-seqs.qza \
+    --o-dna-sequences silva-128-ssu-nr99-seqs.qza
+
+
+
+qiime rescript filter-seqs-length-by-taxon \
+    --i-sequences silva-128-ssu-nr99-seqs.qza \
+    --i-taxonomy silva-128-ssu-nr99-tax.qza \
+    --p-labels Archaea Bacteria Eukaryota \
+    --p-min-lens 900 1200 1400 \
+    --o-filtered-seqs silva-128-ssu-nr99-seqs-filt.qza \
+    --o-discarded-seqs silva-128-ssu-nr99-seqs-discard.qza
+    
+
+qiime rescript dereplicate \
+	--i-sequences silva-128-ssu-nr99-seqs-filt.qza \
+	--i-taxa silva-128-ssu-nr99-tax.qza \
+	--p-rank-handles "silva" \
+	--o-dereplicated-sequences silva-128-ssu-nr99-seqs-derep-uniq.qza \
+	--o-dereplicated-taxa silva-128-ssu-nr99-tax-derep-uniq.qza
+
+
+qiime feature-classifier extract-reads \
+  --i-sequences silva-128-ssu-nr99-seqs-filt.qza \
+  --p-f-primer GGGGAATYTTCCGCAATGGG \
+  --p-r-primer GACTACWGGGGTATCTAATCCCTTT \
+  --p-min-length 200 \
+  --p-max-length 500 \
+  --o-reads ref-seqs-S128-filtered.qza
+
+qiime feature-classifier fit-classifier-naive-bayes \
+  --i-reference-reads ref-seqs-S128-filtered.qza \
+  --i-reference-taxonomy silva-128-ssu-nr99-tax.qza \
+  --o-classifier classifier-s128-filtered.qza
+
+
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier classifier-s128-filtered.qza \
+  --i-reads filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-classification taxonomy-s128-filtered_Cyano_Rodrigo.qza
+
+qiime metadata tabulate \
+  --m-input-file taxonomy-s128-filtered_Cyano_Rodrigo.qza \
+  --o-visualization taxonomy-s128-filtered_Cyano_Rodrigo.qzv
+
+
+
+#Exporto y extraigo la tabla:
+
+qiime tools export \
+  --input-path taxonomy-s128-filtered_Cyano_Rodrigo.qza \
+  --output-path exported-feature-table_Cyano_Rodrigo-silva128
+  
+#Me da una tabla con el nombre de la ASV, las asignaciones y el ratio de cada asignación
+
+qiime tools extract \
+  --input-path taxonomy-s128-filtered_Cyano_Rodrigo.qza \
+  --output-path extracted-feature-table_Cyano_Rodrigo-silva128
+
+
+qiime taxa barplot \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-s128-filtered_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization taxa-bar-plots_Cyano_Rodrigo-silva128.qzv
+
+
+
+qiime taxa filter-table \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-s128-filtered_Cyano_Rodrigo.qza \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tableCyanobacteriasyCloroplast-silva128.qza
+
+qiime taxa filter-table \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-s128-filtered_Cyano_Rodrigo.qza \
+  --p-exclude o__Chloroplast \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tablesoloCyanobacterias-silva128.qza
+
+
+  
+#Ahora filtro también las secuencias basandome en la tabla que ya he creado antes
+
+qiime feature-table filter-seqs \
+  --i-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --i-table tablesoloCyanobacterias-silva128.qza \
+  --o-filtered-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo-silva128.qza
+
+#Sumarizo los resultados
+
+qiime feature-table summarize \
+  --i-table tablesoloCyanobacterias-silva128.qza \
+  --o-visualization tablesoloCyanobacterias-silva128.qzv
+   
+qiime feature-table tabulate-seqs \
+  --i-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo-silva128.qza \
+  --o-visualization Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo-silva128.qzv
+    
+
+qiime taxa barplot \
+  --i-table tablesoloCyanobacterias-silva128.qza \
+  --i-taxonomy taxonomy-s128-filtered_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization Cyanobacteria-Bien-silva128-taxa-bar-plots.qzv
+
+
+#Exporto a biom y a archivo de  texto
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias-silva128.qza \
+  --output-path exported-tableSOLOCyanobacterias-silva128
+
+biom convert \
+-i exported-tableSOLOCyanobacterias-silva128/feature-table.biom \
+-o exported-tableSOLOCyanobacterias-silva128/soloCyanobacteriasfeature-table.txt \
+--header-key “taxonomy” --to-tsv
+
+# Me da la tabla de las ASVs con las frecuencias, pero no me da la taxonomía
+
+
+#Export table.qza in feature-table.biom within exportedfa folder
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias-silva128.qza \
+  --output-path exportedfa-silva128
+
+#Export classification or assignation (classification.qza) into taxonomy.tsv within exportedfa folder
+
+qiime tools export \
+  --input-path taxonomy-s128-filtered_Cyano_Rodrigo.qza \
+  --output-path exportedfa-silva128
+
+#Format columns header of taxonomy.tsv to its proper nomenclature
+
+sed -i s'/Feature ID\tTaxon\tConfidence/\#ASVID\ttaxonomy\tconfidence/'  exportedfa-silva128/taxonomy.tsv
+
+#Add assignation metadata to each asv in feature-table.biom. It generates table-with-taxonomy.biom
+
+biom add-metadata -i exportedfa-silva128/feature-table.biom -o exportedfa-silva128/table-with-taxonomy.biom --observation-metadata-fp exportedfa-silva128/taxonomy.tsv --sc-separated taxonomy 
+
+#Export to tabular file
+
+biom convert --to-tsv -i exportedfa-silva128/table-with-taxonomy.biom -o exportedfa-silva128/fatable.tsv --header-key "taxonomy"
+
+ 
+
+# p-max-depth nº de lecturas mas abundantes contenga en una muestra
+
+
+qiime diversity alpha-rarefaction --i-table tablesoloCyanobacterias-silva128.qza \
+				  --p-max-depth 207213 \
+				  --p-steps 20 \
+				  --i-phylogeny rooted-tree_Cyano_Rodrigo.qza \
+				  --m-metadata-file Metadata_groupayb2.csv \
+				  --o-visualization rarefaction_curves-silva128.qzv
+
+
+##################################################################################
+
+Ahora se va a intentar el mismo protocolo con la base de datos Greengenes, versión gg_13_8.
+
+
+wget ftp://greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_8_otus.tar.gz
+
+# Se descarga el archivo comprimido gg_13_8otus.tar.gz
+
+tar -xf gg_13_8otus.tar.gz
+
+qiime tools import \
+  --type 'FeatureData[Sequence]' \
+  --input-path 99_otus.fasta \
+  --output-path gg_13_8.qza
+
+qiime tools import \
+  --type 'FeatureData[Taxonomy]' \
+  --input-format HeaderlessTSVTaxonomyFormat \
+  --input-path 99_otu_taxonomy.txt \
+  --output-path ref-taxonomy-gg_13_8.qza
+
+
+
+qiime feature-classifier extract-reads \
+  --i-sequences gg_13_8.qza \
+  --p-f-primer GGGGAATYTTCCGCAATGGG \
+  --p-r-primer GACTACWGGGGTATCTAATCCCTTT \
+  --p-min-length 200 \
+  --p-max-length 500 \
+  --o-reads ref-seqs-gg_13_8.qza
+
+qiime feature-classifier fit-classifier-naive-bayes \
+  --i-reference-reads ref-seqs-gg_13_8.qza \
+  --i-reference-taxonomy ref-taxonomy-gg_13_8.qza \
+  --o-classifier classifier-gg_13_8.qza
+
+#Tercero hacer la asignación taxonómica y visualizarla en una tabla:
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier classifier-gg_13_8.qza \
+  --i-reads filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-classification taxonomy-gg_13_8_Cyano_Rodrigo.qza
+
+qiime metadata tabulate \
+  --m-input-file taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --o-visualization taxonomy-gg_13_8_Cyano_Rodrigo.qzv
+
+
+#Exporto y extraigo la tabla:
+
+qiime tools export \
+  --input-path taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --output-path exported-feature-table_Cyano_Rodrigo-gg_13_8
+  
+#Me da una tabla con el nombre de la ASV, las asignaciones y el ratio de cada asignación
+
+qiime tools extract \
+  --input-path taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --output-path extracted-feature-table_Cyano_Rodrigo-gg_13_8
+
+
+
+
+qiime taxa barplot \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization taxa-bar-plots_Cyano_Rodrigo.qzv
+
+
+
+qiime taxa filter-table \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tableCyanobacteriasyCloroplast.qza
+
+qiime taxa filter-table \
+  --i-table frec_filtered_table_Cyano_Rodrigo_trimmed.qza \
+  --i-taxonomy taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --p-exclude o__Chloroplast \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tablesoloCyanobacterias.qza
+
+
+  
+#Ahora filtro también las secuencias basandome en la tabla que ya he creado antes
+
+qiime feature-table filter-seqs \
+  --i-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-filtered-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza
+
+#Sumarizo los resultados
+
+qiime feature-table summarize \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-visualization tablesoloCyanobacterias.qzv
+   
+qiime feature-table tabulate-seqs \
+  --i-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza \
+  --o-visualization Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qzv
+    
+
+
+qiime taxa barplot \
+  --i-table tablesoloCyanobacterias.qza \
+  --i-taxonomy taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization Cyanobacteria-Bien-gg_13_8-taxa-bar-plots.qzv
+
+
+#Exporto a biom y a archivo de  texto
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exported-tableSOLOCyanobacterias-gg_13_8
+
+biom convert \
+-i exported-tableSOLOCyanobacteriasgg_13_8/feature-table.biom \
+-o exported-tableSOLOCyanobacteriasgg_13_8/soloCyanobacteriasfeature-table.txt \
+--header-key “taxonomy” --to-tsv
+
+# Me da la tabla de las ASVs con las frecuencias, pero no me da la taxonomía
+
+
+#Export table.qza in feature-table.biom within exportedfa folder
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exportedfa-gg_13_8
+
+#Export classification or assignation (classification.qza) into taxonomy.tsv within exportedfa folder
+
+qiime tools export \
+  --input-path taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --output-path exportedfa-gg_13_8
+
+#Format columns header of taxonomy.tsv to its proper nomenclature
+
+sed -i s'/Feature ID\tTaxon\tConfidence/\#ASVID\ttaxonomy\tconfidence/'  exportedfa-gg_13_8/taxonomy.tsv
+
+#Add assignation metadata to each asv in feature-table.biom. It generates table-with-taxonomy.biom
+
+biom add-metadata -i exportedfa-gg_13_8/feature-table.biom -o exportedfa-gg_13_8/table-with-taxonomy.biom --observation-metadata-fp exportedfa-gg_13_8/taxonomy.tsv --sc-separated taxonomy 
+
+#Export to tabular file
+
+biom convert --to-tsv -i exportedfa-gg_13_8/table-with-taxonomy.biom -o exportedfa-gg_13_8/fatable.tsv --header-key "taxonomy"
+
+
+
+# p-max-depth nº de lecturas mas abundantes contenga en una muestra
+
+
+qiime diversity alpha-rarefaction --i-table tablesoloCyanobacterias.qza \
+				  --p-max-depth 207213 \
+				  --p-steps 20 \
+				  --i-phylogeny rooted-tree_Cyano_Rodrigo.qza \
+				  --m-metadata-file Metadata_groupayb2.csv \
+				  --o-visualization rarefaction_curves-gg_13_8.qzv

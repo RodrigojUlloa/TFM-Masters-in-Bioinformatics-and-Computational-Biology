@@ -1,0 +1,1123 @@
+ 
+ 
+fastqc *.fastq 
+
+mkdir Calidad_Usearch
+mv *_fastqc.html Calidad_Usearch
+mv *_fastqc.zip Calidad_Usearch
+unzip *_fastqc.zip
+rm *.zip
+
+# Procedo al ensamblaje de las secuencias foward y reverse.
+
+# usearch -fastq_mergepairs SampleA_R1.fastq -reverse SampleA_R2.fastq -fastqout merged.fastq
+
+
+mkdir archivos-fastq_mergepairs
+mv *.fastq  archivos-fastq_mergepairs
+
+usearch11 -fastq_mergepairs 28-P-Fa_R1.fastq -reverse 28-P-Fa_R2.fastq -fastqout 28-P-Ra.fastq -relabel 28P-RayRb_
+usearch11 -fastq_mergepairs 28-P-Fb_R1.fastq -reverse 28-P-Fb_R2.fastq -fastqout 28-P-Rb.fastq -relabel 28P-RayRb_
+usearch11 -fastq_mergepairs 38-P-Fa_R1.fastq -reverse 38-P-Fa_R2.fastq -fastqout 38-P-Ra.fastq -relabel 38P-RayRb_
+usearch11 -fastq_mergepairs 38-P-Fb_R1.fastq -reverse 38-P-Fb_R2.fastq -fastqout 38-P-Rb.fastq -relabel 38P-RayRb_
+usearch11 -fastq_mergepairs 43-P-Fa_R1.fastq -reverse 43-P-Fa_R2.fastq -fastqout 43-P-Ra.fastq -relabel 43P-RayRb_
+usearch11 -fastq_mergepairs 43-P-Fb_R1.fastq -reverse 43-P-Fb_R2.fastq -fastqout 43-P-Rb.fastq -relabel 43P-RayRb_
+usearch11 -fastq_mergepairs ERE3-Fa_R1.fastq -reverse ERE3-Fa_R2.fastq -fastqout ERE3-Ra.fastq -relabel ERE3-RayRb_
+usearch11 -fastq_mergepairs ERE3-Fb_R1.fastq -reverse ERE3-Fb_R2.fastq -fastqout ERE3-Rb.fastq -relabel ERE3-RayRb_
+usearch11 -fastq_mergepairs G1-15-V-Fa_R1.fastq -reverse G1-15-V-Fa_R2.fastq -fastqout G1-15-V-Ra.fastq -relabel G115V-RayRb_
+usearch11 -fastq_mergepairs G1-15-V-Fb_R1.fastq -reverse G1-15-V-Fb_R2.fastq -fastqout G1-15-V-Rb.fastq -relabel G115V-RayRb_
+usearch11 -fastq_mergepairs G1-16-P-Fa_R1.fastq -reverse G1-16-P-Fa_R2.fastq -fastqout G1-16-P-Ra.fastq -relabel G116P-RayRb_
+usearch11 -fastq_mergepairs G1-16-P-Fb_R1.fastq -reverse G1-16-P-Fb_R2.fastq -fastqout G1-16-P-Rb.fastq -relabel G116P-RayRb_
+usearch11 -fastq_mergepairs G2-16-P-Fa_R1.fastq -reverse G2-16-P-Fa_R2.fastq -fastqout G2-16-P-Ra.fastq -relabel G216P-RayRb_
+usearch11 -fastq_mergepairs G2-16-P-Fb_R1.fastq -reverse G2-16-P-Fb_R2.fastq -fastqout G2-16-P-Rb.fastq -relabel G216P-RayRb_
+usearch11 -fastq_mergepairs G3-15-V-Fa_R1.fastq -reverse G3-15-V-Fa_R2.fastq -fastqout G3-15-V-Ra.fastq -relabel G315V-RayRb_
+usearch11 -fastq_mergepairs G3-15-V-Fb_R1.fastq -reverse G3-15-V-Fb_R2.fastq -fastqout G3-15-V-Rb.fastq -relabel G315V-RayRb_
+usearch11 -fastq_mergepairs G3-16-P-Fa_R1.fastq -reverse G3-16-P-Fa_R2.fastq -fastqout G3-16-P-Ra.fastq -relabel G316P-RayRb_
+usearch11 -fastq_mergepairs G3-16-P-Fb_R1.fastq -reverse G3-16-P-Fb_R2.fastq -fastqout G3-16-P-Rb.fastq -relabel G316P-RayRb_
+usearch11 -fastq_mergepairs Loz16-Fa_R1.fastq -reverse Loz16-Fa_R2.fastq -fastqout Loz16-Ra.fastq -relabel Loz16-RayRb_
+usearch11 -fastq_mergepairs Loz16-Fb_R1.fastq -reverse Loz16-Fb_R2.fastq -fastqout Loz16-Rb.fastq -relabel Loz16-RayRb_
+usearch11 -fastq_mergepairs MED-Fa_R1.fastq -reverse MED-Fa_R2.fastq -fastqout MED-Ra.fastq -relabel MED-RayRb_
+usearch11 -fastq_mergepairs MED-Fb_R1.fastq -reverse MED-Fb_R2.fastq -fastqout MED-Rb.fastq -relabel MED-RayRb_
+usearch11 -fastq_mergepairs Mnz16-Fa_R1.fastq -reverse Mnz16-Fa_R2.fastq -fastqout Mnz16-Ra.fastq -relabel Mnz16-RayRb_
+usearch11 -fastq_mergepairs Mnz16-Fb_R1.fastq -reverse Mnz16-Fb_R2.fastq -fastqout Mnz16-Rb.fastq -relabel Mnz16-RayRb_
+
+usearch11 -fastq_mergepairs Q14C-O-Fa_R1.fastq -reverse Q14C-O-Fa_R2.fastq -fastqout Q14C-O-Ra.fastq -relabel Q14CO-RayRb_
+usearch11 -fastq_mergepairs Q14C-O-Fb_R1.fastq -reverse Q14C-O-Fb_R2.fastq -fastqout Q14C-O-Rb.fastq -relabel Q14CO-RayRb_
+usearch11 -fastq_mergepairs Q18B-O-Fa_R1.fastq -reverse Q18B-O-Fa_R2.fastq -fastqout Q18B-O-Ra.fastq -relabel Q18BO-RayRb_
+usearch11 -fastq_mergepairs Q18B-O-Fb_R1.fastq -reverse Q18B-O-Fb_R2.fastq -fastqout Q18B-O-Rb.fastq -relabel Q18BO-RayRb_
+usearch11 -fastq_mergepairs Q19A-O-Fa_R1.fastq -reverse Q19A-O-Fa_R2.fastq -fastqout Q19A-O-Ra.fastq -relabel Q19AO-RayRb_
+usearch11 -fastq_mergepairs Q19A-O-Fb_R1.fastq -reverse Q19A-O-Fb_R2.fastq -fastqout Q19A-O-Rb.fastq -relabel Q19AO-RayRb_
+usearch11 -fastq_mergepairs Q19-V-Fa_R1.fastq -reverse Q19-V-Fa_R2.fastq -fastqout Q19-V-Ra.fastq -relabel Q19V-RayRb_
+usearch11 -fastq_mergepairs Q19-V-Fb_R1.fastq -reverse Q19-V-Fb_R2.fastq -fastqout Q19-V-Rb.fastq -relabel Q19V-RayRb_
+usearch11 -fastq_mergepairs Q26-V-Fa_R1.fastq -reverse Q26-V-Fa_R2.fastq -fastqout Q26-V-Ra.fastq -relabel Q26V-RayRb_
+usearch11 -fastq_mergepairs Q26-V-Fb_R1.fastq -reverse Q26-V-Fb_R2.fastq -fastqout Q26-V-Rb.fastq -relabel Q26V-RayRb_
+usearch11 -fastq_mergepairs Q30-V-Fa_R1.fastq -reverse Q30-V-Fa_R2.fastq -fastqout Q30-V-Ra.fastq -relabel Q30V-RayRb_
+usearch11 -fastq_mergepairs Q30-V-Fb_R1.fastq -reverse Q30-V-Fb_R2.fastq -fastqout Q30-V-Rb.fastq -relabel Q30V-RayRb_
+
+
+cat *Ra.fastq *Rb.fastq >> merged.fq
+
+
+
+
+
+
+# lo siguiente lo hago en la carpeta de merge-pairs.
+#Pruebo estadisticas con usearch11:
+# la opcion length_cutoffs hace referencia primero a la secuencia más corta, luego la secuencia más larga y por último al incremento.
+
+#usearch -fastq_eestats2 reads.fastq -output eestats2.txt -length_cutoffs 200,300,10
+
+#usearch -fastq_eestats2 reads.fastq -output eestats2.txt -length_cutoffs 50,500,20 # se utiliza éste
+
+
+usearch11 -fastq_eestats2 28-P-Ra.fastq -output 28-P-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 28-P-Rb.fastq -output 28-P-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 38-P-Ra.fastq -output 38-P-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 38-P-Rb.fastq -output 38-P-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 43-P-Ra.fastq -output 43-P-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 43-P-Rb.fastq -output 43-P-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 ERE3-Ra.fastq -output ERE3-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 ERE3-Rb.fastq -output ERE3-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 G1-15-V-Ra.fastq -output G1-15-V-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 G1-15-V-Rb.fastq -output G1-15-V-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 G1-16-P-Ra.fastq -output G1-16-P-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 G1-16-P-Rb.fastq -output G1-16-P-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 G2-16-P-Ra.fastq -output G2-16-P-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 G2-16-P-Rb.fastq -output G2-16-P-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 G3-15-V-Ra.fastq -output G3-15-V-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 G3-15-V-Rb.fastq -output G3-15-V-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 G3-16-P-Ra.fastq -output G3-16-P-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 G3-16-P-Rb.fastq -output G3-16-P-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Loz16-Ra.fastq -output Loz16-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Loz16-Rb.fastq -output Loz16-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 MED-Ra.fastq -output MED-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 MED-Rb.fastq -output MED-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Mnz16-Ra.fastq -output Mnz16-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Mnz16-Rb.fastq -output Mnz16-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Ph1-Ra.fastq -output Ph1-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Ph1-Rb.fastq -output Ph1-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Ph2-Ra.fastq -output Ph2-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Ph2-Rb.fastq -output Ph2-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 PhE-Ra.fastq -output PhE-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 PhE-Rb.fastq -output PhE-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q14C-O-Ra.fastq -output Q14C-O-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q14C-O-Rb.fastq -output Q14C-O-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q18B-O-Ra.fastq -output Q18B-O-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q18B-O-Rb.fastq -output Q18B-O-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q19A-O-Ra.fastq -output Q19A-O-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q19A-O-Rb.fastq -output Q19A-O-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q19-V-Ra.fastq -output Q19-V-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q19-V-Rb.fastq -output Q19-V-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q26-V-Ra.fastq -output Q26-V-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q26-V-Rb.fastq -output Q26-V-Rb-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q30-V-Ra.fastq -output Q30-V-Ra-eestats2.txt -length_cutoffs 50,500,20
+usearch11 -fastq_eestats2 Q30-V-Rb.fastq -output Q30-V-Rb-eestats2.txt -length_cutoffs 50,500,20
+
+mkdir eestats2-usearch11
+mv *.txt  eestats2-usearch11
+
+
+# Ahora voy a proceder con el filtrado de las secuencias. Para ello, he consultado en la página de usearch y utilizaré el siguiente comando:
+
+
+# Este comando es el ejemplo que se utiliza para quitar las secuencia de los primers. En este caso se tiene como foward GGGGAATYTTCCGCAATGGG y como reverse GACTACWGGGGTATCTAATCCCWTT, cada un con 20 y 25 bases respectivamente.
+
+# usearch -fastx_truncate merged.fq -stripleft 19 -stripright 20 -fastqout stripped.fq
+
+usearch11 -fastx_truncate 28-P-Ra.fastq -stripleft 20 -stripright 25 -fastqout 28-P-Ra-stripped.fq
+usearch11 -fastx_truncate 28-P-Rb.fastq -stripleft 20 -stripright 25 -fastqout 28-P-Rb-stripped.fq 
+usearch11 -fastx_truncate 38-P-Ra.fastq -stripleft 20 -stripright 25 -fastqout 38-P-Ra-stripped.fq 
+usearch11 -fastx_truncate 38-P-Rb.fastq -stripleft 20 -stripright 25 -fastqout 38-P-Rb-stripped.fq 
+usearch11 -fastx_truncate 43-P-Ra.fastq -stripleft 20 -stripright 25 -fastqout 43-P-Ra-stripped.fq 
+usearch11 -fastx_truncate 43-P-Rb.fastq -stripleft 20 -stripright 25 -fastqout 43-P-Rb-stripped.fq 
+usearch11 -fastx_truncate ERE3-Ra.fastq -stripleft 20 -stripright 25 -fastqout ERE3-Ra-stripped.fq 
+usearch11 -fastx_truncate ERE3-Rb.fastq -stripleft 20 -stripright 25 -fastqout ERE3-Rb-stripped.fq 
+usearch11 -fastx_truncate G1-15-V-Ra.fastq -stripleft 20 -stripright 25 -fastqout G1-15-V-Ra-stripped.fq 
+usearch11 -fastx_truncate G1-15-V-Rb.fastq -stripleft 20 -stripright 25 -fastqout G1-15-V-Rb-stripped.fq 
+usearch11 -fastx_truncate G1-16-P-Ra.fastq -stripleft 20 -stripright 25 -fastqout G1-16-P-Ra-stripped.fq 
+usearch11 -fastx_truncate G1-16-P-Rb.fastq -stripleft 20 -stripright 25 -fastqout G1-16-P-Rb-stripped.fq 
+usearch11 -fastx_truncate G2-16-P-Ra.fastq -stripleft 20 -stripright 25 -fastqout G2-16-P-Ra-stripped.fq 
+usearch11 -fastx_truncate G2-16-P-Rb.fastq -stripleft 20 -stripright 25 -fastqout G2-16-P-Rb-stripped.fq 
+usearch11 -fastx_truncate G3-15-V-Ra.fastq -stripleft 20 -stripright 25 -fastqout G3-15-V-Ra-stripped.fq 
+usearch11 -fastx_truncate G3-15-V-Rb.fastq -stripleft 20 -stripright 25 -fastqout G3-15-V-Rb-stripped.fq 
+usearch11 -fastx_truncate G3-16-P-Ra.fastq -stripleft 20 -stripright 25 -fastqout G3-16-P-Ra-stripped.fq 
+usearch11 -fastx_truncate G3-16-P-Rb.fastq -stripleft 20 -stripright 25 -fastqout G3-16-P-Rb-stripped.fq
+usearch11 -fastx_truncate Loz16-Ra.fastq -stripleft 20 -stripright 25 -fastqout Loz16-Ra-stripped.fq 
+usearch11 -fastx_truncate Loz16-Rb.fastq -stripleft 20 -stripright 25 -fastqout Loz16-Rb-stripped.fq 
+usearch11 -fastx_truncate MED-Ra.fastq -stripleft 20 -stripright 25 -fastqout MED-Ra-stripped.fq
+usearch11 -fastx_truncate MED-Rb.fastq -stripleft 20 -stripright 25 -fastqout MED-Rb-stripped.fq 
+usearch11 -fastx_truncate Mnz16-Ra.fastq -stripleft 20 -stripright 25 -fastqout Mnz16-Ra-stripped.fq 
+usearch11 -fastx_truncate Mnz16-Rb.fastq -stripleft 20 -stripright 25 -fastqout Mnz16-Rb-stripped.fq 
+usearch11 -fastx_truncate Ph1-Ra.fastq -stripleft 20 -stripright 25 -fastqout Ph1-Ra-stripped.fq 
+usearch11 -fastx_truncate Ph1-Rb.fastq -stripleft 20 -stripright 25 -fastqout Ph1-Rb-stripped.fq 
+usearch11 -fastx_truncate Ph2-Ra.fastq -stripleft 20 -stripright 25 -fastqout Ph2-Ra-stripped.fq 
+usearch11 -fastx_truncate Ph2-Rb.fastq -stripleft 20 -stripright 25 -fastqout Ph2-Rb-stripped.fq 
+usearch11 -fastx_truncate PhE-Ra.fastq -stripleft 20 -stripright 25 -fastqout PhE-Ra-stripped.fq 
+usearch11 -fastx_truncate PhE-Rb.fastq -stripleft 20 -stripright 25 -fastqout PhE-Rb-stripped.fq 
+usearch11 -fastx_truncate Q14C-O-Ra.fastq -stripleft 20 -stripright 25 -fastqout Q14C-O-Ra-stripped.fq 
+usearch11 -fastx_truncate Q14C-O-Rb.fastq -stripleft 20 -stripright 25 -fastqout Q14C-O-Rb-stripped.fq 
+usearch11 -fastx_truncate Q18B-O-Ra.fastq -stripleft 20 -stripright 25 -fastqout Q18B-O-Ra-stripped.fq 
+usearch11 -fastx_truncate Q18B-O-Rb.fastq -stripleft 20 -stripright 25 -fastqout Q18B-O-Rb-stripped.fq 
+usearch11 -fastx_truncate Q19A-O-Ra.fastq -stripleft 20 -stripright 25 -fastqout Q19A-O-Ra-stripped.fq 
+usearch11 -fastx_truncate Q19A-O-Rb.fastq -stripleft 20 -stripright 25 -fastqout Q19A-O-Rb-stripped.fq 
+usearch11 -fastx_truncate Q19-V-Ra.fastq -stripleft 20 -stripright 25 -fastqout Q19-V-Ra-stripped.fq 
+usearch11 -fastx_truncate Q19-V-Rb.fastq -stripleft 20 -stripright 25 -fastqout Q19-V-Rb-stripped.fq 
+usearch11 -fastx_truncate Q26-V-Ra.fastq -stripleft 20 -stripright 25 -fastqout Q26-V-Ra-stripped.fq 
+usearch11 -fastx_truncate Q26-V-Rb.fastq -stripleft 20 -stripright 25 -fastqout Q26-V-Rb-stripped.fq 
+usearch11 -fastx_truncate Q30-V-Ra.fastq -stripleft 20 -stripright 25 -fastqout Q30-V-Ra-stripped.fq 
+usearch11 -fastx_truncate Q30-V-Rb.fastq -stripleft 20 -stripright 25 -fastqout Q30-V-Rb-stripped.fq 
+
+
+# También hay que tener en cuenta que las estadísticas se han hecho antes del primer trimming por lo que sería aconsejable volver a hacerlas para comprobar los cambios:
+
+usearch11 -fastq_eestats2 28-P-Ra-stripped.fq -output 28-P-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 28-P-Rb-stripped.fq -output 28-P-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 38-P-Ra-stripped.fq -output 38-P-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 38-P-Rb-stripped.fq -output 38-P-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 43-P-Ra-stripped.fq -output 43-P-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 43-P-Rb-stripped.fq -output 43-P-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 ERE3-Ra-stripped.fq -output ERE3-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 ERE3-Rb-stripped.fq -output ERE3-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 G1-15-V-Ra-stripped.fq -output G1-15-V-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 G1-15-V-Rb-stripped.fq -output G1-15-V-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 G1-16-P-Ra-stripped.fq -output G1-16-P-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 G1-16-P-Rb-stripped.fq -output G1-16-P-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 G2-16-P-Ra-stripped.fq -output G2-16-P-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 G2-16-P-Rb-stripped.fq -output G2-16-P-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 G3-15-V-Ra-stripped.fq -output G3-15-V-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 G3-15-V-Rb-stripped.fq -output G3-15-V-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 G3-16-P-Ra-stripped.fq -output G3-16-P-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 G3-16-P-Rb-stripped.fq -output G3-16-P-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Loz16-Ra-stripped.fq -output Loz16-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Loz16-Rb-stripped.fq -output Loz16-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 MED-Ra-stripped.fq -output MED-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 MED-Rb-stripped.fq -output MED-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Mnz16-Ra-stripped.fq -output Mnz16-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Mnz16-Rb-stripped.fq -output Mnz16-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Ph1-Ra-stripped.fq -output Ph1-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Ph1-Rb-stripped.fq -output Ph1-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Ph2-Ra-stripped.fq -output Ph2-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Ph2-Rb-stripped.fq -output Ph2-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 PhE-Ra-stripped.fq -output PhE-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 PhE-Rb-stripped.fq -output PhE-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q14C-O-Ra-stripped.fq -output Q14C-O-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q14C-O-Rb-stripped.fq -output Q14C-O-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q18B-O-Ra-stripped.fq -output Q18B-O-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q18B-O-Rb-stripped.fq -output Q18B-O-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q19A-O-Ra-stripped.fq -output Q19A-O-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q19A-O-Rb-stripped.fq -output Q19A-O-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q19-V-Ra-stripped.fq -output Q19-V-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q19-V-Rb-stripped.fq -output Q19-V-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q26-V-Ra-stripped.fq -output Q26-V-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q26-V-Rb-stripped.fq -output Q26-V-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q30-V-Ra-stripped.fq -output Q30-V-Ra-eestats2-stripped.txt -length_cutoffs 50,500,10
+usearch11 -fastq_eestats2 Q30-V-Rb-stripped.fq -output Q30-V-Rb-eestats2-stripped.txt -length_cutoffs 50,500,10
+
+mkdir usearch11-eestats2-stripped
+mv *eestats2-stripped.txt  usearch11-eestats2-stripped
+
+
+# Ahora sí, se va a proceder a realizar el filtrado de calidad. Para ello, se va a utiliza como ejemplo el sigueinte comando de userach:
+
+# usearch -fastq_filter trimmed.fq -fastq_maxee 1.0 -fastaout filtered.fa
+
+# No obstante, se van a cambiar algunos parámetros y añadir el relabel para juntar las secuencias Ra y Rb. 
+
+# usearch -fastq_filter trimmed.fq -fastq_maxee 0.5 -relabel 28-P-RayRb -fastaout filtered.fa
+
+
+usearch11 -fastq_filter 28-P-Ra-stripped.fq -fastq_maxee 0.5 -fastaout 28-P-Ra-filtered.fa -relabel 28_P-RayRb_
+usearch11 -fastq_filter 28-P-Rb-stripped.fq -fastq_maxee 0.5 -fastaout 28-P-Rb-filtered.fa -relabel 28_P-RayRb_ 
+usearch11 -fastq_filter 38-P-Ra-stripped.fq -fastq_maxee 0.5 -fastaout 38-P-Ra-filtered.fa -relabel 38_P-RayRb_ 
+usearch11 -fastq_filter 38-P-Rb-stripped.fq -fastq_maxee 0.5 -fastaout 38-P-Rb-filtered.fa -relabel 38_P-RayRb_ 
+usearch11 -fastq_filter 43-P-Ra-stripped.fq -fastq_maxee 0.5 -fastaout 43-P-Ra-filtered.fa -relabel 43_P-RayRb_ 
+usearch11 -fastq_filter 43-P-Rb-stripped.fq -fastq_maxee 0.5 -fastaout 43-P-Rb-filtered.fa -relabel 43_P-RayRb_ 
+usearch11 -fastq_filter ERE3-Ra-stripped.fq -fastq_maxee 0.5 -fastaout ERE3-Ra-filtered.fa -relabel ERE3-RayRb_ 
+usearch11 -fastq_filter ERE3-Rb-stripped.fq -fastq_maxee 0.5 -fastaout ERE3-Rb-filtered.fa -relabel ERE3-RayRb_ 
+usearch11 -fastq_filter G1-15-V-Ra-stripped.fq -fastq_maxee 0.5 -fastaout G1-15-V-Ra-filtered.fa -relabel G1_15_V-RayRb_ 
+usearch11 -fastq_filter G1-15-V-Rb-stripped.fq -fastq_maxee 0.5 -fastaout G1-15-V-Rb-filtered.fa -relabel G1_15_V-RayRb_
+usearch11 -fastq_filter G1-16-P-Ra-stripped.fq -fastq_maxee 0.5 -fastaout G1-16-P-Ra-filtered.fa -relabel G1_16_P-RayRb_ 
+usearch11 -fastq_filter G1-16-P-Rb-stripped.fq -fastq_maxee 0.5 -fastaout G1-16-P-Rb-filtered.fa -relabel G1_16_P-RayRb_
+usearch11 -fastq_filter G2-16-P-Ra-stripped.fq -fastq_maxee 0.5 -fastaout G2-16-P-Ra-filtered.fa -relabel G2_16_P-RayRb_
+usearch11 -fastq_filter G2-16-P-Rb-stripped.fq -fastq_maxee 0.5 -fastaout G2-16-P-Rb-filtered.fa -relabel G2_16_P-RayRb_
+usearch11 -fastq_filter G3-15-V-Ra-stripped.fq -fastq_maxee 0.5 -fastaout G3-15-V-Ra-filtered.fa -relabel G3_15_V-RayRb_ 
+usearch11 -fastq_filter G3-15-V-Rb-stripped.fq -fastq_maxee 0.5 -fastaout G3-15-V-Rb-filtered.fa -relabel G3_15_V-RayRb_
+usearch11 -fastq_filter G3-16-P-Ra-stripped.fq -fastq_maxee 0.5 -fastaout G3-16-P-Ra-filtered.fa -relabel G3_16_P-RayRb_
+usearch11 -fastq_filter G3-16-P-Rb-stripped.fq -fastq_maxee 0.5 -fastaout G3-16-P-Rb-filtered.fa -relabel G3_16_P-RayRb_
+usearch11 -fastq_filter Loz16-Ra-stripped.fq -fastq_maxee 0.5 -fastaout Loz16-Ra-filtered.fa -relabel Loz16-RayRb_
+usearch11 -fastq_filter Loz16-Rb-stripped.fq -fastq_maxee 0.5 -fastaout Loz16-Rb-filtered.fa -relabel Loz16-RayRb_ 
+usearch11 -fastq_filter MED-Ra-stripped.fq -fastq_maxee 0.5 -fastaout MED-Ra-filtered.fa -relabel MED-RayRb_ 
+usearch11 -fastq_filter MED-Rb-stripped.fq -fastq_maxee 0.5 -fastaout MED-Rb-filtered.fa -relabel MED-RayRb_ 
+usearch11 -fastq_filter Mnz16-Ra-stripped.fq -fastq_maxee 0.5 -fastaout Mnz16-Ra-filtered.fa -relabel Mnz16-RayRb_ 
+usearch11 -fastq_filter Mnz16-Rb-stripped.fq -fastq_maxee 0.5 -fastaout Mnz16-Rb-filtered.fa -relabel Mnz16-RayRb_ 
+usearch11 -fastq_filter Ph1-Ra-stripped.fq -fastq_maxee 0.5 -fastaout Ph1-Ra-filtered.fa -relabel Ph1-RayRb_ 
+usearch11 -fastq_filter Ph1-Rb-stripped.fq -fastq_maxee 0.5 -fastaout Ph1-Rb-filtered.fa -relabel Ph1-RayRb_ 
+usearch11 -fastq_filter Ph2-Ra-stripped.fq -fastq_maxee 0.5 -fastaout Ph2-Ra-filtered.fa -relabel Ph2-RayRb_
+usearch11 -fastq_filter Ph2-Rb-stripped.fq -fastq_maxee 0.5 -fastaout Ph2-Rb-filtered.fa -relabel Ph2-RayRb_ 
+usearch11 -fastq_filter PhE-Ra-stripped.fq -fastq_maxee 0.5 -fastaout PhE-Ra-filtered.fa -relabel PhE-RayRb_ 
+usearch11 -fastq_filter PhE-Rb-stripped.fq -fastq_maxee 0.5 -fastaout PhE-Rb-filtered.fa -relabel PhE-RayRb_ 
+usearch11 -fastq_filter Q14C-O-Ra-stripped.fq -fastq_maxee 0.5 -fastaout Q14C-O-Ra-filtered.fa -relabel Q14C-RayRb_ 
+usearch11 -fastq_filter Q14C-O-Rb-stripped.fq -fastq_maxee 0.5 -fastaout Q14C-O-Rb-filtered.fa -relabel Q14C-RayRb_ 
+usearch11 -fastq_filter Q18B-O-Ra-stripped.fq -fastq_maxee 0.5 -fastaout Q18B-O-Ra-filtered.fa -relabel Q18B-RayRb_ 
+usearch11 -fastq_filter Q18B-O-Rb-stripped.fq -fastq_maxee 0.5 -fastaout Q18B-O-Rb-filtered.fa -relabel Q18B-RayRb_ 
+usearch11 -fastq_filter Q19A-O-Ra-stripped.fq -fastq_maxee 0.5 -fastaout Q19A-O-Ra-filtered.fa -relabel Q19A_O-RayRb_ 
+usearch11 -fastq_filter Q19A-O-Rb-stripped.fq -fastq_maxee 0.5 -fastaout Q19A-O-Rb-filtered.fa -relabel Q19A_O-RayRb_ 
+usearch11 -fastq_filter Q19-V-Ra-stripped.fq -fastq_maxee 0.5 -fastaout Q19-V-Ra-filtered.fa -relabel Q19_V-RayRb_ 
+usearch11 -fastq_filter Q19-V-Rb-stripped.fq -fastq_maxee 0.5 -fastaout Q19-V-Rb-filtered.fa -relabel Q19_V-RayRb_
+usearch11 -fastq_filter Q26-V-Ra-stripped.fq -fastq_maxee 0.5 -fastaout Q26-V-Ra-filtered.fa -relabel Q26_V-RayRb_ 
+usearch11 -fastq_filter Q26-V-Rb-stripped.fq -fastq_maxee 0.5 -fastaout Q26-V-Rb-filtered.fa -relabel Q26_V-RayRb_ 
+usearch11 -fastq_filter Q30-V-Ra-stripped.fq -fastq_maxee 0.5 -fastaout Q30-V-Ra-filtered.fa -relabel Q30_V-RayRb_ 
+usearch11 -fastq_filter Q30-V-Rb-stripped.fq -fastq_maxee 0.5 -fastaout Q30-V-Rb-filtered.fa -relabel Q30_V-RayRb_ 
+
+
+
+Realización del Pool sample de todas las muestras:
+
+cat *Rb-filtered.fa *Ra-filtered.fa >> secuencias-filtered.fa
+
+grep -c ">" secuencias-filtered.fa
+1.520.424
+
+
+A continuación, sigue el paso de dereplicación, utilizando como ejemplo el modelo de usearch11:
+
+# usearch -fastx_uniques input.fasta -fastaout uniques.fasta -sizeout -relabel Uniq
+
+usearch11 -fastx_uniques secuencias-filtered.fa -fastaout secuencias-uniques.fasta -sizeout -relabel Uniq
+
+# Output generado:
+
+00:04 675Mb   100.0% Reading secuencias-filtered.fa
+00:04 641Mb  CPU has 12 cores, defaulting to 10 threads
+00:05 1.0Gb   100.0% DF
+00:07 1.0Gb  1520424 seqs, 86339 uniques, 69023 singletons (79.9%)
+00:07 1.0Gb  Min size 1, median 1, max 643547, avg 17.61
+00:07 790Mb   100.0% Writing secuencias-uniques.fasta
+
+
+
+
+
+# usearch -sortbylength seqs.fasta -fastaout seqs_sorted.fasta -minseqlength 64
+
+usearch11 -sortbylength secuencias-filtered.fa -fastaout secuencias-filtered-sorted.fa 
+
+License: personal use only
+
+00:05 675Mb   100.0% Reading secuencias-filtered.fa
+00:05 641Mb  Sorting by length                     
+00:05 648Mb  Length min 9, median 380, max 465
+00:10 648Mb   100.0% Writing output
+00:10 648Mb  Write done, closing file and exiting
+
+
+
+# usearch -sortbysize seqs.fasta -fastaout seqs_sorted.fasta -minsize 4
+
+usearch11 -sortbysize secuencias-uniques.fasta -fastaout secuencias-uniques_sorted.fasta -minsize 2
+
+usearch11 -sortbylength secuencias-uniques_sorted.fasta -fastaout secuencias-uniques_sorted_sortedbylength.fasta
+
+
+License: personal use only
+
+00:00 74Mb    100.0% Reading secuencias-uniques.fasta
+00:00 41Mb   Getting sizes                           
+00:00 41Mb   Sorting 17316 sequences
+00:01 41Mb    100.0% Writing output
+usearch v11.0.667_i86linux32, 4.0Gb RAM (32.8Gb total), 12 cores
+(C) Copyright 2013-18 Robert C. Edgar, all rights reserved.
+https://drive5.com/usearch
+
+License: personal use only
+
+00:00 48Mb    100.0% Reading secuencias-uniques_sorted.fasta
+00:00 14Mb   Sorting by length                              
+00:00 14Mb   Length min 9, median 380, max 420
+00:00 14Mb    100.0% Writing output
+00:00 14Mb   Write done, closing file and exiting
+
+
+
+
+
+
+# Se procede a utilizar el siguiente comando para obtener información sobre el archivo fasta. Lo que se consigue saber en este caso es que el primer cuartil está constituido por secuencias de una media de 379 bases. Por lo tanto, si se realiza un corte inferior de 360 bases con el comando sortbylength no se perderá demasiada información.
+
+usearch -fastx_info huge_reads.fastq -secs 5 -output reads_info.txt
+
+usearch11 -fastx_info secuencias-uniques_sorted_sortedbylength.fasta -secs 5 -output reads_info.txt
+
+License: personal use only
+
+00:00 38Mb    100.0% Processing
+Stopped after 0 secs
+
+File size 7.0M, 17.3k seqs, 6.6M letters
+Lengths min 9, lo_quartile 379, median 380, hi_quartile 380, max 420
+Letter freqs G 33.2%, A 27.6%, C 20.1%, T 19.1%
+0% masked (lower-case)
+
+
+# REALIZAR CORTE EN 360. Para dar cierto margen. 
+
+# usearch -sortbylength seqs.fasta -fastaout seqs_sorted.fasta -minseqlength 64
+
+usearch11 -sortbylength secuencias-uniques_sorted.fasta -fastaout secuencias-uniques_sorted-min-360 -minseqlength 360
+
+License: personal use only
+
+00:00 48Mb    100.0% Reading secuencias-uniques_sorted.fasta
+00:00 14Mb   Sorting by length                              
+00:00 14Mb   Length min 9, median 380, max 420
+00:00 14Mb    100.0% Writing output 201 short, 0 long
+00:00 14Mb   Write done, closing file and exiting    
+
+grep -c ">" secuencias-uniques_sorted-min-360
+
+# Se obtienen 17114 secuencias, todas con un mínimo de 360 bases.
+
+
+# Ahora se va a proceder a hacer las zOTUs
+
+
+
+# usearch -unoise3 uniques.fa -zotus zotus.fa
+
+usearch11 -sortbysize secuencias-uniques_sorted-min-360 -fastaout secuencias-min360-uniques_sorted.fasta -minsize 90
+
+
+usearch11 -unoise3 secuencias-min360-uniques_sorted.fasta -zotus zotus.fa
+
+# sortbysize para quitar las zOTUs menores del 0,1% de la profundidad media, la cual se ha calculado con ayuda del archivo zotutab abierto con libreoffice y haciendo el promedio de las secuecias en las muestras y calculado el 0,1% del resultado. 
+
+License: personal use only
+
+00:00 48Mb    100.0% Reading secuencias-uniques_sorted-min-360
+00:00 14Mb   Getting sizes                                    
+00:00 14Mb   Sorting 589 sequences
+00:00 14Mb    100.0% Writing output
+usearch v11.0.667_i86linux32, 4.0Gb RAM (32.8Gb total), 12 cores
+(C) Copyright 2013-18 Robert C. Edgar, all rights reserved.
+https://drive5.com/usearch
+
+License: personal use only
+
+00:00 41Mb    100.0% Reading secuencias-min360-uniques_sorted.fasta
+00:00 14Mb    100.0% 138 amplicons, 172431 bad (size >= 90)        
+00:00 21Mb    100.0% 114 good, 24 chimeras                 
+00:00 21Mb    100.0% Writing zotus        
+
+# Construcción de la tabla de zotus.
+
+# usearch -otutab reads.fq -zotus zotus.fa -otutabout zotutab.txt -mapout zmap.txt -notmatched unmapped.fa -sizeout
+
+
+
+
+usearch11 -otutab merged.fq -zotus zotus.fa -otutabout zotutab.txt -mapout zmap.txt -notmatched unmapped.fa -sizeout
+
+License: personal use only
+
+00:00 41Mb    100.0% Reading zotus.fa
+00:00 7.2Mb   100.0% Masking (fastnucleo)
+00:00 8.2Mb   100.0% Word stats          
+00:00 8.2Mb   100.0% Alloc rows
+00:00 8.8Mb   100.0% Build index
+00:00 42Mb   CPU has 12 cores, defaulting to 10 threads
+29:34 138Mb   100.0% Searching, 97.4% matched
+3481891 / 3574776 mapped to OTUs (97.4%)     
+29:34 138Mb  Writing zotutab.txt
+29:34 138Mb  Writing zotutab.txt ...done.
+
+WARNING: Option -sizeout not used
+
+
+
+
+# biom convert -i otu_table.txt -o new_otu_table.biom --to-json --table-type="OTU table" --process-obs-metadata taxonomy
+
+
+biom convert -i zotutab.txt -o new_zotu_table.biom --to-json --table-type="OTU table" --process-obs-metadata taxonomy
+
+biom convert -i zotus.fa -o new_zotu_table.biom --to-json --table-type="OTU table" --process-obs-metadata taxonomy
+
+
+
+biom convert -i zotutab.csv -o converted_table.biom --to-hdf5
+
+biom convert -i zotus.fa -o converted_table.biom --to-hdf5
+
+
+# conseguir la tabla biom utilizando como input eñ archivo zotutuab en formato csv. 
+
+
+qiime tools import \
+  --input-path zotus.fa \
+  --output-path zotus_sequences.qza \
+  --type 'FeatureData[Sequence]'
+
+
+
+qiime tools import \
+  --input-path converted_table.biom \
+  --type 'FeatureTable[Frequency]' \
+  --input-format BIOMV210Format \
+  --output-path zotutab.qza
+
+
+
+qiime feature-table filter-seqs --i-data zotus_sequences.qza --i-table zotutab.qza --o-filtered-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza
+
+
+
+qiime phylogeny align-to-tree-mafft-fasttree \
+  --i-sequences filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --p-n-threads auto \
+  --o-alignment aligned-rep-seqs_Cyano_Rodrigo.qza \
+  --o-masked-alignment masked-aligned-rep-seqs_Cyano_Rodrigo.qza \
+  --o-tree unrooted-tree_Cyano_Rodrigo.qza \
+  --o-rooted-tree rooted-tree_Cyano_Rodrigo.qza
+
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier classifier-s138.qza \
+  --i-reads filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-classification taxonomy-s138_Cyano_Rodrigo.qza
+
+qiime metadata tabulate \
+  --m-input-file taxonomy-s138_Cyano_Rodrigo.qza \
+  --o-visualization taxonomy-s138_Cyano_Rodrigo.qzv
+
+
+
+#################
+#Exporto y extraigo la tabla:
+
+qiime tools export \
+  --input-path taxonomy-s138_Cyano_Rodrigo.qza \
+  --output-path exported-feature-table_s138_Cyano_Rodrigo
+  
+#Me da una tabla con el nombre de la ASV, las asignaciones y el ratio de cada asignación
+
+qiime tools extract \
+  --input-path taxonomy-s138_Cyano_Rodrigo.qza \
+  --output-path extracted-feature-table_s138_Cyano_Rodrigo
+
+
+
+qiime taxa barplot \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-s138_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization taxa-bar-plots_Cyano_Rodrigo.qzv
+
+qiime taxa filter-table \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-s138_Cyano_Rodrigo.qza \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tableCyanobacteriasyCloroplast.qza
+
+qiime taxa filter-table \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-s138_Cyano_Rodrigo.qza \
+  --p-exclude o__Chloroplast \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tablesoloCyanobacterias.qza
+
+  
+#Ahora filtro también las secuencias basandome en la tabla que ya he creado antes.
+
+qiime feature-table filter-seqs \
+  --i-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-filtered-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza
+
+#Sumarizo los resultados
+
+qiime feature-table summarize \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-visualization tablesoloCyanobacterias.qzv
+   
+qiime feature-table tabulate-seqs \
+  --i-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza \
+  --o-visualization Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qzv
+    
+
+qiime taxa barplot \
+  --i-table tablesoloCyanobacterias.qza \
+  --i-taxonomy taxonomy-s138_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization Cyanobacteria-Bien-s138-taxa-bar-plots.qzv
+
+
+
+#Exporto a biom y a archivo de  texto
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exported-tableSOLOCyanobacterias
+
+biom convert \
+-i exported-tableSOLOCyanobacterias/feature-table.biom \
+-o exported-tableSOLOCyanobacterias/soloCyanobacteriasfeature-table.txt \
+--header-key “taxonomy” --to-tsv
+
+
+#Export table.qza in feature-table.biom within exportedfa folder
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exportedfasilva138.1filtered
+
+#Export classification or assignation (classification.qza) into taxonomy.tsv within exportedfa folder
+
+qiime tools export \
+  --input-path taxonomy-s138_Cyano_Rodrigo.qza \
+  --output-path exportedfasilva138.1filtered
+
+#Format columns header of taxonomy.tsv to its proper nomenclature
+
+sed -i s'/Feature ID\tTaxon\tConfidence/\#ASVID\ttaxonomy\tconfidence/'  exportedfasilva138.1filtered/taxonomy.tsv
+
+#Add assignation metadata to each asv in feature-table.biom. It generates table-with-taxonomy.biom
+
+biom add-metadata -i exportedfasilva138.1filtered/feature-table.biom -o exportedfasilva138.1filtered/table-with-taxonomy.biom --observation-metadata-fp exportedfasilva138.1filtered/taxonomy.tsv --sc-separated taxonomy 
+
+
+biom convert --to-tsv -i exportedfasilva138.1filtered/table-with-taxonomy.biom -o exportedfasilva138.1filtered/fatable.tsv --header-key "taxonomy"
+
+
+# p-max-depth es el número de lecturas más abundantes en una muestra. En este caso hay que cambiarlo, ya que se han hecho las cosas diferentes, no con qiime2 sino con usearch11. 
+
+qiime diversity alpha-rarefaction --i-table tablesoloCyanobacterias.qza \
+				  --p-max-depth 122723 \
+				  --p-steps 20 \
+				  --i-phylogeny rooted-tree_Cyano_Rodrigo.qza \
+				  --m-metadata-file Metadata_groupayb2.csv \
+				  --o-visualization rarefaction_curvessilva138.1filtered.qzv
+
+
+
+mkdir usearch11-silva138.1
+
+#################################################################
+
+# Se continua con silva 128 con el mismo procedimiento.
+
+################################################################
+
+
+qiime feature-table filter-seqs --i-data zotus_sequences.qza --i-table zotutab.qza --o-filtered-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza
+
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier classifier-s128-filtered.qza \
+  --i-reads filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-classification taxonomy-s128_Cyano_Rodrigo.qza
+
+qiime metadata tabulate \
+  --m-input-file taxonomy-s128_Cyano_Rodrigo.qza \
+  --o-visualization taxonomy-s128_Cyano_Rodrigo.qzv
+
+
+
+#################
+#Exporto y extraigo la tabla:
+
+qiime tools export \
+  --input-path taxonomy-s128_Cyano_Rodrigo.qza \
+  --output-path exported-feature-table_s128_Cyano_Rodrigo
+  
+#Me da una tabla con el nombre de la ASV, las asignaciones y el ratio de cada asignación
+
+qiime tools extract \
+  --input-path taxonomy-s128_Cyano_Rodrigo.qza \
+  --output-path extracted-feature-table_s128_Cyano_Rodrigo
+
+
+
+qiime taxa barplot \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-s128_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization taxa-bar-plots_Cyano_Rodrigo.qzv
+
+qiime taxa filter-table \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-s128_Cyano_Rodrigo.qza \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tableCyanobacteriasyCloroplast.qza
+
+qiime taxa filter-table \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-s128_Cyano_Rodrigo.qza \
+  --p-exclude o__Chloroplast \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tablesoloCyanobacterias.qza
+
+  
+#Ahora filtro también las secuencias basandome en la tabla que ya he creado antes.
+
+qiime feature-table filter-seqs \
+  --i-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-filtered-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza
+
+#Sumarizo los resultados
+
+qiime feature-table summarize \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-visualization tablesoloCyanobacterias.qzv
+   
+qiime feature-table tabulate-seqs \
+  --i-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza \
+  --o-visualization Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qzv
+    
+
+qiime taxa barplot \
+  --i-table tablesoloCyanobacterias.qza \
+  --i-taxonomy taxonomy-s128_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization Cyanobacteria-Bien-s128-taxa-bar-plots.qzv
+
+
+
+#Exporto a biom y a archivo de  texto
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exported-tableSOLOCyanobacterias
+
+biom convert \
+-i exported-tableSOLOCyanobacterias/feature-table.biom \
+-o exported-tableSOLOCyanobacterias/soloCyanobacteriasfeature-table.txt \
+--header-key “taxonomy” --to-tsv
+
+
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exportedfasilva128
+
+#Export classification or assignation (classification.qza) into taxonomy.tsv within exportedfa folder
+
+qiime tools export \
+  --input-path taxonomy-s128_Cyano_Rodrigo.qza \
+  --output-path exportedfasilva128
+
+
+sed -i s'/Feature ID\tTaxon\tConfidence/\#ASVID\ttaxonomy\tconfidence/'  exportedfasilva128/taxonomy.tsv
+
+
+biom add-metadata -i exportedfasilva128/feature-table.biom -o exportedfasilva128/table-with-taxonomy.biom --observation-metadata-fp exportedfasilva128/taxonomy.tsv --sc-separated taxonomy 
+
+
+
+biom convert --to-tsv -i exportedfasilva128/table-with-taxonomy.biom -o exportedfasilva128/fatable.tsv --header-key "taxonomy"
+
+
+# p-max-depth es el número de lecturas más abundantes en una muestra. En este caso hay que cambiarlo, ya que se han hecho las cosas diferentes, no con qiime2 sino con usearch11. 
+
+qiime diversity alpha-rarefaction --i-table tablesoloCyanobacterias.qza \
+				  --p-max-depth 122723 \
+				  --p-steps 20 \
+				  --i-phylogeny rooted-tree_Cyano_Rodrigo.qza \
+				  --m-metadata-file Metadata_groupayb2.csv \
+				  --o-visualization rarefaction_curvessilva128.qzv
+
+
+
+mkdir usearch11-silva128
+
+#################################################################################################
+
+# Se continua con la base de datos de greengenes, gg_13_5.
+
+
+classifier-gg_13_5.qza
+
+
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier classifier-gg_13_5.qza \
+  --i-reads filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-classification taxonomy-gg_13_5_Cyano_Rodrigo.qza
+
+qiime metadata tabulate \
+  --m-input-file taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --o-visualization taxonomy-gg_13_5_Cyano_Rodrigo.qzv
+
+
+#################
+#Exporto y extraigo la tabla:
+
+qiime tools export \
+  --input-path taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --output-path exported-feature-table_gg_13_5_Cyano_Rodrigo
+  
+#Me da una tabla con el nombre de la ASV, las asignaciones y el ratio de cada asignación
+
+qiime tools extract \
+  --input-path taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --output-path extracted-feature-table_gg_13_5_Cyano_Rodrigo
+
+
+
+qiime taxa barplot \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization taxa-bar-plots_Cyano_Rodrigo.qzv
+
+qiime taxa filter-table \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tableCyanobacteriasyCloroplast.qza
+
+qiime taxa filter-table \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --p-exclude o__Chloroplast \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tablesoloCyanobacterias.qza
+
+  
+#Ahora filtro también las secuencias basandome en la tabla que ya he creado antes.
+
+qiime feature-table filter-seqs \
+  --i-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-filtered-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza
+
+#Sumarizo los resultados
+
+qiime feature-table summarize \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-visualization tablesoloCyanobacterias.qzv
+   
+qiime feature-table tabulate-seqs \
+  --i-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza \
+  --o-visualization Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qzv
+    
+
+qiime taxa barplot \
+  --i-table tablesoloCyanobacterias.qza \
+  --i-taxonomy taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization Cyanobacteria-Bien-gg_13_5-taxa-bar-plots.qzv
+
+
+
+#Exporto a biom y a archivo de  texto
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exported-tableSOLOCyanobacterias
+
+biom convert \
+-i exported-tableSOLOCyanobacterias/feature-table.biom \
+-o exported-tableSOLOCyanobacterias/soloCyanobacteriasfeature-table.txt \
+--header-key “taxonomy” --to-tsv
+
+
+#Export table.qza in feature-table.biom within exportedfa folder
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exportedfagg_13_5
+
+#Export classification or assignation (classification.qza) into taxonomy.tsv within exportedfa folder
+
+qiime tools export \
+  --input-path taxonomy-gg_13_5_Cyano_Rodrigo.qza \
+  --output-path exportedfagg_13_5
+
+#Format columns header of taxonomy.tsv to its proper nomenclature
+
+sed -i s'/Feature ID\tTaxon\tConfidence/\#ASVID\ttaxonomy\tconfidence/'  exportedfagg_13_5/taxonomy.tsv
+
+#Add assignation metadata to each asv in feature-table.biom. It generates table-with-taxonomy.biom
+
+biom add-metadata -i exportedfagg_13_5/feature-table.biom -o exportedfagg_13_5/table-with-taxonomy.biom --observation-metadata-fp exportedfagg_13_5/taxonomy.tsv --sc-separated taxonomy 
+
+
+#Export to tabular file
+
+biom convert --to-tsv -i exportedfagg_13_5/table-with-taxonomy.biom -o exportedfagg_13_5/fatable.tsv --header-key "taxonomy"
+
+
+# p-max-depth es el número de lecturas más abundantes en una muestra. En este caso hay que cambiarlo, ya que se han hecho las cosas diferentes, no con qiime2 sino con usearch11. 
+
+qiime diversity alpha-rarefaction --i-table tablesoloCyanobacterias.qza \
+				  --p-max-depth 122723 \
+				  --p-steps 20 \
+				  --i-phylogeny rooted-tree_Cyano_Rodrigo.qza \
+				  --m-metadata-file Metadata_groupayb2.csv \
+				  --o-visualization rarefaction_curvesgg_13_5.qzv
+
+
+
+mkdir usearch11-gg_13_5
+
+########################################################################################
+
+# Se continua con la base de datos greengenes versión gg_13_8
+
+
+
+classifier-gg_13_8.qza
+
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier classifier-gg_13_8.qza \
+  --i-reads filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-classification taxonomy-gg_13_8_Cyano_Rodrigo.qza
+
+qiime metadata tabulate \
+  --m-input-file taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --o-visualization taxonomy-gg_13_8_Cyano_Rodrigo.qzv
+
+
+#################
+#Exporto y extraigo la tabla:
+
+qiime tools export \
+  --input-path taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --output-path exported-feature-table_gg_13_8_Cyano_Rodrigo
+  
+#Me da una tabla con el nombre de la ASV, las asignaciones y el ratio de cada asignación
+
+qiime tools extract \
+  --input-path taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --output-path extracted-feature-table_gg_13_8_Cyano_Rodrigo
+
+
+qiime taxa barplot \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization taxa-bar-plots_Cyano_Rodrigo.qzv
+
+qiime taxa filter-table \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tableCyanobacteriasyCloroplast.qza
+
+qiime taxa filter-table \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --p-exclude o__Chloroplast \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tablesoloCyanobacterias.qza
+
+  
+#Ahora filtro también las secuencias basandome en la tabla que ya he creado antes.
+
+qiime feature-table filter-seqs \
+  --i-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-filtered-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza
+
+#Sumarizo los resultados
+
+qiime feature-table summarize \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-visualization tablesoloCyanobacterias.qzv
+   
+qiime feature-table tabulate-seqs \
+  --i-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza \
+  --o-visualization Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qzv
+    
+
+qiime taxa barplot \
+  --i-table tablesoloCyanobacterias.qza \
+  --i-taxonomy taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization Cyanobacteria-Bien-gg_13_8-taxa-bar-plots.qzv
+
+
+
+#Exporto a biom y a archivo de  texto
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exported-tableSOLOCyanobacterias
+
+biom convert \
+-i exported-tableSOLOCyanobacterias/feature-table.biom \
+-o exported-tableSOLOCyanobacterias/soloCyanobacteriasfeature-table.txt \
+--header-key “taxonomy” --to-tsv
+
+
+#Export table.qza in feature-table.biom within exportedfa folder
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exportedfagg_13_8
+
+#Export classification or assignation (classification.qza) into taxonomy.tsv within exportedfa folder
+
+qiime tools export \
+  --input-path taxonomy-gg_13_8_Cyano_Rodrigo.qza \
+  --output-path exportedfagg_13_8
+
+#Format columns header of taxonomy.tsv to its proper nomenclature
+
+sed -i s'/Feature ID\tTaxon\tConfidence/\#ASVID\ttaxonomy\tconfidence/'  exportedfagg_13_8/taxonomy.tsv
+
+#Add assignation metadata to each asv in feature-table.biom. It generates table-with-taxonomy.biom
+
+biom add-metadata -i exportedfagg_13_8/feature-table.biom -o exportedfagg_13_8/table-with-taxonomy.biom --observation-metadata-fp exportedfagg_13_8/taxonomy.tsv --sc-separated taxonomy 
+
+
+#Export to tabular file
+
+biom convert --to-tsv -i exportedfagg_13_8/table-with-taxonomy.biom -o exportedfagg_13_8/fatable.tsv --header-key "taxonomy"
+
+
+# p-max-depth es el número de lecturas más abundantes en una muestra. En este caso hay que cambiarlo, ya que se han hecho las cosas diferentes, no con qiime2 sino con usearch11. 
+
+qiime diversity alpha-rarefaction --i-table tablesoloCyanobacterias.qza \
+				  --p-max-depth 122723 \
+				  --p-steps 20 \
+				  --i-phylogeny rooted-tree_Cyano_Rodrigo.qza \
+				  --m-metadata-file Metadata_groupayb2.csv \
+				  --o-visualization rarefaction_curvesgg_13_8.qzv
+
+
+
+mkdir usearch11-gg_13_8
+
+
+#######################################################################################################
+
+# Se continua con la base de datos RDP
+
+classifier-RDP-filt.qza
+
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier classifier-RDP-filt.qza \
+  --i-reads filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --o-classification taxonomy-RDP-filt_Cyano_Rodrigo.qza
+
+qiime metadata tabulate \
+  --m-input-file taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --o-visualization taxonomy-RDP-filt_Cyano_Rodrigo.qzv
+
+
+#################
+#Exporto y extraigo la tabla:
+
+qiime tools export \
+  --input-path taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --output-path exported-feature-table_RDP-filt_Cyano_Rodrigo
+  
+#Me da una tabla con el nombre de la ASV, las asignaciones y el ratio de cada asignación
+
+qiime tools extract \
+  --input-path taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --output-path extracted-feature-table_RDP-filt_Cyano_Rodrigo
+
+
+
+qiime taxa barplot \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization taxa-bar-plots_Cyano_Rodrigo.qzv
+
+qiime taxa filter-table \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tableCyanobacteriasyCloroplast.qza
+
+qiime taxa filter-table \
+  --i-table zotutab.qza \
+  --i-taxonomy taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --p-exclude o__Chloroplast \
+  --p-include p__Cyanobacteria \
+  --o-filtered-table tablesoloCyanobacterias.qza
+
+  
+#Ahora filtro también las secuencias basandome en la tabla que ya he creado antes.
+
+qiime feature-table filter-seqs \
+  --i-data filtered_rep-seqs_Cyano_Rodrigo_trimmed.qza \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-filtered-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza
+
+#Sumarizo los resultados
+
+qiime feature-table summarize \
+  --i-table tablesoloCyanobacterias.qza \
+  --o-visualization tablesoloCyanobacterias.qzv
+   
+qiime feature-table tabulate-seqs \
+  --i-data Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qza \
+  --o-visualization Cyanobacterias-rep-seqs-filtered_Cyano_Rodrigo.qzv
+    
+
+qiime taxa barplot \
+  --i-table tablesoloCyanobacterias.qza \
+  --i-taxonomy taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --m-metadata-file Metadata_groupayb2.csv \
+  --o-visualization Cyanobacteria-Bien-RDP-filt-taxa-bar-plots.qzv
+
+
+
+#Exporto a biom y a archivo de  texto
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exported-tableSOLOCyanobacterias
+
+biom convert \
+-i exported-tableSOLOCyanobacterias/feature-table.biom \
+-o exported-tableSOLOCyanobacterias/soloCyanobacteriasfeature-table.txt \
+--header-key “taxonomy” --to-tsv
+
+
+#Export table.qza in feature-table.biom within exportedfa folder
+
+qiime tools export \
+  --input-path tablesoloCyanobacterias.qza \
+  --output-path exportedfaRDP-filt
+
+#Export classification or assignation (classification.qza) into taxonomy.tsv within exportedfa folder
+
+qiime tools export \
+  --input-path taxonomy-RDP-filt_Cyano_Rodrigo.qza \
+  --output-path exportedfaRDP-filt
+
+#Format columns header of taxonomy.tsv to its proper nomenclature
+
+sed -i s'/Feature ID\tTaxon\tConfidence/\#ASVID\ttaxonomy\tconfidence/'  exportedfaRDP-filt/taxonomy.tsv
+
+#Add assignation metadata to each asv in feature-table.biom. It generates table-with-taxonomy.biom
+
+biom add-metadata -i exportedfaRDP-filt/feature-table.biom -o exportedfaRDP-filt/table-with-taxonomy.biom --observation-metadata-fp exportedfaRDP-filt/taxonomy.tsv --sc-separated taxonomy 
+
+
+#Export to tabular file
+
+biom convert --to-tsv -i exportedfaRDP-filt/table-with-taxonomy.biom -o exportedfaRDP-filt/fatable.tsv --header-key "taxonomy"
+
+
+# p-max-depth es el número de lecturas más abundantes en una muestra. En este caso hay que cambiarlo, ya que se han hecho las cosas diferentes, no con qiime2 sino con usearch11. 
+
+qiime diversity alpha-rarefaction --i-table tablesoloCyanobacterias.qza \
+				  --p-max-depth 122723 \
+				  --p-steps 20 \
+				  --i-phylogeny rooted-tree_Cyano_Rodrigo.qza \
+				  --m-metadata-file Metadata_groupayb2.csv \
+				  --o-visualization rarefaction_curvesRDP-filt.qzv
+
+
+
+mkdir usearch11-RDP-filt
